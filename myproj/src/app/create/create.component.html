@@ -1,0 +1,203 @@
+<div class="container">
+    <!-- <div class="col-md-10">
+        <div class="card-com">
+            <div class="card">
+                <h5 class="card-header">Create</h5>
+                <div class="card-body">
+                    <h5 class="card-title">Fill the employee details</h5>
+                    <form [formGroup]="profileForm">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Name</label>
+                            <input type="text" class="form-control" formControlName="name" id="exampleFormControlInput1"
+                                placeholder="enter name">
+                            <span style="color:#f44336;font-size: 83%;"
+                                *ngIf="profileForm.get('name').invalid && profileForm.get('name').touched">
+                                <span *ngIf="profileForm.get('name').errors.required">
+                                    Name is required.
+                                </span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput2">Salary</label>
+                            <input type="text" class="form-control" formControlName="salary"
+                                id="exampleFormControlInput2" placeholder="enter salary">
+                            <span style="color:#f44336;font-size: 83%;"
+                                *ngIf="profileForm.get('salary').invalid && profileForm.get('salary').touched">
+                                <span *ngIf="profileForm.get('salary').errors.required">
+                                    Salary is required.
+                                </span>
+                                <span *ngIf="profileForm.get('salary').errors.pattern">
+                                    Enter numbers only
+                                </span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput2">City</label>
+                            <input type="text" class="form-control" formControlName="city" id="exampleFormControlInput2"
+                                placeholder="enter city">
+                            <span style="color:#f44336;font-size: 83%;"
+                                *ngIf="profileForm.get('city').invalid && profileForm.get('city').touched">
+                                <span *ngIf="profileForm.get('city').errors.required">
+                                    City is required.
+                                </span>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlInput2">Phone No</label>
+                            <input type="text" class="form-control" formControlName="phone"
+                                id="exampleFormControlInput2" placeholder="enter phone number">
+                            <span style="color:#f44336;font-size: 83%;"
+                                *ngIf="profileForm.get('phone').invalid && profileForm.get('phone').touched">
+                                <span *ngIf="profileForm.get('phone').errors.required">
+                                    Phone number is required.
+                                </span>
+                                <span *ngIf="profileForm.get('phone').errors?.minlength">
+                                    Phone number must be at least 10 characters long.
+                                </span>
+                                <span *ngIf="profileForm.get('phone').errors?.maxlength">
+                                    Phone number is not more than 10 digits.
+                                </span>
+                                <span *ngIf="profileForm.get('phone').touched && profileForm.get('phone').errors?.pattern">
+                                    Phone number should start with 6 or 7 or 8 or 9.
+                                </span>
+                            </span>
+
+                        </div>
+                    </form>
+                    <button  class="btn btn-primary" type="submit" [disabled]="!profileForm.valid" (click)="onSave(profileForm.value)" >Save</button>
+                    <button  class="btn btn-primary" type="submit" [disabled]="!profileForm.valid" (click)="onUpdate()" style="margin-left: 10px;" >Update</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <h3>Employee Details</h3>
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Salary</th>
+            <th scope="col">City</th>
+            <th scope="col">Mobile Number</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of resData | paginate: { itemsPerPage: pages, currentPage:pd, id:'pd' }" >
+            <td>{{data.id}}</td>
+            <td>{{data.name}}</td>
+            <td>{{data.salary}}</td>
+            <td>{{data.city}}</td>
+            <td>{{data.phone}}</td>
+            <td><button class="btn btn-primary" (click)="editData(data)" data-toggle="modal" data-target=".bd-example-modal-lg">Edit</button>
+                <button class="btn btn-primary" style="margin-left:10px;"
+                (click)="onDelete(data)">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="but-class">
+      <button class="btn btn-primary" style="margin:auto;" data-toggle="modal" data-target=".bd-example-modal-lg">Create</button>
+      </div>
+      <!-- <div>
+        <span class="m-2 col-1">Items per page</span>
+        <select [(ngModel)]="pages" class="col-1">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+        </select>
+        <pagination-controls (pageChange)="pd = $event" id="pd" style="float:right"></pagination-controls>
+    </div> -->
+</div>
+
+<!-- Large modal -->
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Employee Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <div class="col-md-10">
+            <div class="card-com">
+                <div class="card">
+                    <h5 class="card-header" *ngIf="creText">Create</h5>
+                    <h5 class="card-header" *ngIf="creText1">Update</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Fill the employee details</h5>
+                        <form [formGroup]="profileForm">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Name</label>
+                                <input type="text" class="form-control" formControlName="name" id="exampleFormControlInput1"
+                                    placeholder="enter name">
+                                <span style="color:#f44336;font-size: 83%;"
+                                    *ngIf="profileForm.get('name').invalid && profileForm.get('name').touched">
+                                    <span *ngIf="profileForm.get('name').errors.required">
+                                        Name is required.
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput2">Salary</label>
+                                <input type="text" class="form-control" formControlName="salary"
+                                    id="exampleFormControlInput2" placeholder="enter salary">
+                                <span style="color:#f44336;font-size: 83%;"
+                                    *ngIf="profileForm.get('salary').invalid && profileForm.get('salary').touched">
+                                    <span *ngIf="profileForm.get('salary').errors.required">
+                                        Salary is required.
+                                    </span>
+                                    <span *ngIf="profileForm.get('salary').errors.pattern">
+                                        Enter numbers only
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput2">City</label>
+                                <input type="text" class="form-control" formControlName="city" id="exampleFormControlInput2"
+                                    placeholder="enter city">
+                                <span style="color:#f44336;font-size: 83%;"
+                                    *ngIf="profileForm.get('city').invalid && profileForm.get('city').touched">
+                                    <span *ngIf="profileForm.get('city').errors.required">
+                                        City is required.
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput2">Phone No</label>
+                                <input type="text" class="form-control" formControlName="phone"
+                                    id="exampleFormControlInput2" placeholder="enter phone number">
+                                <span style="color:#f44336;font-size: 83%;"
+                                    *ngIf="profileForm.get('phone').invalid && profileForm.get('phone').touched">
+                                    <span *ngIf="profileForm.get('phone').errors.required">
+                                        Phone number is required.
+                                    </span>
+                                    <span *ngIf="profileForm.get('phone').errors?.minlength">
+                                        Phone number must be at least 10 characters long.
+                                    </span>
+                                    <span *ngIf="profileForm.get('phone').errors?.maxlength">
+                                        Phone number is not more than 10 digits.
+                                    </span>
+                                    <span *ngIf="profileForm.get('phone').touched && profileForm.get('phone').errors?.pattern">
+                                        Phone number should start with 6 or 7 or 8 or 9.
+                                    </span>
+                                </span>
+    
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button  class="btn btn-primary" type="submit" [disabled]="!profileForm.valid" (click)="onSave(profileForm.value)"  data-dismiss="modal" *ngIf="saButton" >Save</button>
+                            <button  class="btn btn-primary" type="submit" [disabled]="!profileForm.valid" (click)="onUpdate()" style="margin-left: 10px;" data-dismiss="modal" *ngIf="upButton" >Update</button>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
